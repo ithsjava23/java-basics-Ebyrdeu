@@ -56,9 +56,9 @@ public class Window {
 
     /**
      * First method that user need to choose when app is started as HashMap at moment is empty
-     * */
+     */
     private void input() {
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 24; i++) {
             Utils.format("%02d o'clock price: ", i);
             // Note: Parse to integer necessary
             data.put(i, Integer.parseInt(Utils.prompt()));
@@ -66,12 +66,9 @@ public class Window {
 
         Utils.log("Show inputs before continue y/n \n");
 
-        if (Utils.prompt().equals("y")) data.forEach((i, o) -> {
-            if (i < 10) Utils.format("%02d-%02d: %d Öre \n", i, i + 1, o);
-            else Utils.format("%02d-%02d: %d Öre \n", i, i + 1, o);
-            menu();
-        });
-        else menu();
+        if (Utils.prompt().equals("y")) data.forEach((i, o) -> Utils.format("%02d-%02d: %d Öre \n", i, i + 1, o));
+
+        menu();
     }
 
 
