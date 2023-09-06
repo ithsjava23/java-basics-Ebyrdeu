@@ -72,7 +72,7 @@ public class Window {
             Utils.format("%02d-%02d o'clock price: ", i, i + 1);
 
             /*
-             * arg 1 -  Format K to 00-01 as string
+             * arg 1 -  Format K to 00 as string
              * Parse to integer necessary as prompt returns @type String
              * */
             data.put(String.format("%02d", i), Integer.parseInt(Utils.prompt()));
@@ -84,16 +84,47 @@ public class Window {
         menu();
     }
 
+    /**
+     * Method that allow to show Min Max and Avrage value on user provided inputs*/
+    // TODO: Need optimization and refactoring
+    // NOTE: For now do work that needed
     private void minMaxAverage() {
+        List<Map.Entry<String, Integer>> list = new ArrayList<>(data.entrySet());
+        int temp = 0;
+
+        // Min
+        list.sort(Map.Entry.comparingByValue(Comparator.naturalOrder()));
+        for (Map.Entry<String, Integer> entry : list) {
+            Utils.log("Min: " + entry.getValue() + "\n");
+            break;
+        }
+
+        // Max
+        list.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+        for (Map.Entry<String, Integer> entry : list) {
+            Utils.log("Max: " + entry.getValue() + "\n");
+            break;
+        }
+        // Average
+        for (Map.Entry<String, Integer> entry : list) {
+            temp += entry.getValue();
+        }
+
+        Utils.log("Average: " + (temp / 3) + "\n");
+
         menu();
     }
 
     /**
-     * Sorting a List from descending order
-     * */
+     * Sorting a List based on user desire
+     */
     private void sort() {
         List<Map.Entry<String, Integer>> list = new ArrayList<>(data.entrySet());
-        list.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+
+        if (Utils.logPrompt("Do you want to sort by Descending or Ascending order d/a \n").equals("d"))
+            list.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+        else
+            list.sort(Map.Entry.comparingByValue(Comparator.naturalOrder()));
 
         for (Map.Entry<String, Integer> entry : list)
             Utils.format("%s: %d Öre \n", entry.getKey(), entry.getValue());
