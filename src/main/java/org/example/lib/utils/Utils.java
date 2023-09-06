@@ -11,7 +11,7 @@ public class Utils {
     /**
      * Method that simplifies scanner method for user input
      *
-     * @return text always returned  in lowerCase
+     * @return String always returned  in lowerCase
      */
     public static String prompt() {
         return new Scanner(System.in).nextLine().toLowerCase();
@@ -29,6 +29,19 @@ public class Utils {
 
         System.out.printf(text);
     }
+
+
+    /**
+     * Method that combines both log and prompt method
+     *
+     * @return String value from prompt
+     * @implNote Use When you need both logging and prompting to user
+     */
+    public static String logPrompt(String logText) {
+        log(logText);
+        return prompt();
+    }
+
 
     /**
      * Work same as printf but with error handling on empty format and arguments
