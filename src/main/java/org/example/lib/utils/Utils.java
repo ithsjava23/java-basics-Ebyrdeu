@@ -1,12 +1,14 @@
 package org.example.lib.utils;
 
-import java.util.Scanner;
+import java.util.*;
 
 
 /**
  * The Utils class provides some useful methods to reduce repeated code
  */
 public class Utils {
+    private Utils() {
+    }
 
     /**
      * Method that simplifies scanner method for user input
@@ -16,7 +18,6 @@ public class Utils {
     public static String prompt() {
         return new Scanner(System.in).nextLine().toLowerCase();
     }
-
 
     /**
      * Only purpose is make it act like a char type when is empty
@@ -30,7 +31,6 @@ public class Utils {
         System.out.printf(text);
     }
 
-
     /**
      * Method that combines both log and prompt method
      *
@@ -41,7 +41,6 @@ public class Utils {
         log(logText);
         return prompt();
     }
-
 
     /**
      * Work same as printf but with error handling on empty format and arguments
@@ -54,5 +53,7 @@ public class Utils {
         if (args.length == 0) throw new RuntimeException("Empty Arguments");
         System.out.printf((format) + "%n", args);
     }
+
+
 
 }
