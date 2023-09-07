@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class Window {
     private final static TreeMap<String, Integer> TREE_MAP = new TreeMap<>();
-
     private final static String MENU = """
             Elpriser
             ========
@@ -22,69 +21,27 @@ public class Window {
             e. Avsluta
             """;
 
+    private Window() {
+    }
+
     /**
      * Main Method to start the app
      *
-     * @return Window class if user want to use optional Method showGraph()
      */
-    public Window menu() {
+    public static void menu() {
         menuOptions(Utils.logPrompt(MENU));
-        return this;
     }
 
-    /**
-     * Optional method for showing console graph based on data in HashMap
-     *
-     * @implNote Only use After calling a menu() method as it where you load data first
-     */
-    // TODO: Optimize min value graph
-    public void showGraph() {
-        int max = TREE_MAP.values().stream().max(Integer::compareTo).orElse(0);
-        int min = TREE_MAP.values().stream().min(Integer::compareTo).orElse(0);
-
-        // Check Max value Map have to see what step to use for rendering y-axis/columns
-        int stepSize = (max >= 100) ? 100 : (max >= 10) ? 10 : 1;
-
-        for (int i = max; i >= stepSize; i -= stepSize) {
-            // Render the y-axis/columns
-            if (max == i) System.out.printf("%3d| ", i);
-            else System.out.print("   | ");
-
-            // Render bars depending on value we have
-            int finalI = i;
-            TREE_MAP.forEach((s, integer) -> {
-                if (integer >= finalI) System.out.print(" * ");
-                else System.out.print("   ");
-            });
-            // Print new line
-            System.out.println();
-        }
-
-        // Check Min value Map rendering y-axis/columns
-        System.out.printf("%3d| ", min);
-        TREE_MAP.forEach((s, integer) -> {
-            if (integer >= min) System.out.print(" * ");
-            else System.out.print("   ");
-        });
-        System.out.println();
-
-        // Render the x-axis/rows
-        Utils.log("   |------------------------------------------------------------------------ \n");
-        Utils.log("   | ");
-        TREE_MAP.forEach((s, integer) -> Utils.log(s + " "));
-
-        menu();
-    }
 
     /**
      * @param opt takes value from MENU constant
      */
-    private void menuOptions(String opt) {
+    private static void menuOptions(String opt) {
         switch (opt) {
             case "1" -> input();
             case "2" -> minMaxAverage();
             case "3" -> sort();
-            case "4" -> Utils.log("Bästa Laddningstid");
+            case "4" -> bestChargeTime();
             case "5" -> showGraph();
             case "e" -> exit();
             default -> menu();
@@ -94,7 +51,7 @@ public class Window {
     /**
      * First method that user need to choose when app is started as HashMap at moment is empty
      */
-    private void input() {
+    private static void input() {
         for (int i = 0; i < 3; i++) {
             Utils.format("%02d-%02d o'clock price: ", i, i + 1);
 
@@ -112,9 +69,9 @@ public class Window {
     }
 
     /**
-     * Method that allow to show Min Max and Avrage value on user provided inputs
+     * Method that allow to show Min Max and Average value on user provided inputs
      */
-    private void minMaxAverage() {
+    private static void minMaxAverage() {
         AtomicInteger temp = new AtomicInteger();
 
         // Min
@@ -135,7 +92,7 @@ public class Window {
     /**
      * Sorting a List based on user desire
      */
-    private void sort() {
+    private static void sort() {
         // Convert to List<Map.Entry<K, V>> for easy sort method
         List<Map.Entry<String, Integer>> list = new ArrayList<>(TREE_MAP.entrySet());
         list.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
@@ -146,10 +103,56 @@ public class Window {
         menu();
     }
 
+    // TODO: create logic
+    private static void bestChargeTime() {
+    }
+
+    /**
+     * Optional method for showing console graph based on data in HashMap
+     *
+     * @implNote Only use After calling a menu() method as it where you load data first
+     */
+    public static void showGraph() {
+        int max = TREE_MAP.values().stream().max(Integer::compareTo).orElse(0);
+        int min = TREE_MAP.values().stream().min(Integer::compareTo).orElse(0);
+
+        int numSteps = 5;
+
+        // Calculate the size of each step on the y-axis
+        int stepSize = (max - min) / numSteps;
+
+        // Check Max value Map have to see what step to use for rendering y-axis/columns
+        for (int i = numSteps; i >= 0; i--) {
+
+            // Calculate the y-axis value for the current step
+            int yValue = min + i * stepSize;
+
+            // Render the y-axis/columns and labels
+            if (yValue == max || yValue == min) System.out.printf("%3d| ", yValue);
+            else Utils.log("   | ");
+
+            // Render bars depending on value we have
+            TREE_MAP.forEach((s, integer) -> {
+                if (integer >= yValue) Utils.log(" * ");
+                else System.out.print("   ");
+            });
+
+            // Print new line
+            System.out.println();
+        }
+
+        // Render the x-axis/rows
+        Utils.log("   |------------------------------------------------------------------------ \n");
+        Utils.log("   | ");
+        TREE_MAP.forEach((s, integer) -> Utils.log(s + " "));
+
+        menu();
+    }
+
     /**
      * Method to exit app
      */
-    private void exit() {
+    private static void exit() {
         if (Utils.logPrompt("Are you sure you want to exit a program y/n").equals("y")) Utils.log("Exited");
         else menu();
     }

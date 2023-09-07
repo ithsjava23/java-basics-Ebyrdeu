@@ -27,8 +27,7 @@ public class Utils {
 
     public static void log(String text) {
         if (text.isBlank()) throw new RuntimeException("Empty String");
-
-        System.out.printf(text);
+        System.out.print(text);
     }
 
     /**
