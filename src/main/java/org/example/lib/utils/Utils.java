@@ -1,6 +1,9 @@
 package org.example.lib.utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 
 /**
@@ -53,6 +56,45 @@ public class Utils {
         System.out.printf((format) + "%n", args);
     }
 
+    /**
+     * Format to 00-00 type of clock
+     *
+     * @param clock return any 0-9 type of string otherwise it's going to fail
+     * @return String with calculated time to second be always +1
+     */
+    public static String clockFormat(String clock) {
+        return String.format("%s-%02d", clock, Integer.parseInt(clock) + 1);
+    }
+
+    /**
+     * Method that find best 4 consecutive hours
+     *
+     * @param list takes any list where is K String and V Integer
+     * @return List<String> that contains best 4 consecutive hours
+     */
+    public static List<String> getBestHours(List<Map.Entry<String, Integer>> list) {
+        int minTotalPrice = Integer.MAX_VALUE;
+
+        List<String> bestHours = new ArrayList<>();
+
+        for (int i = 0; i <= list.size() - 4; i++) {
+            int total = 0;
+
+            List<String> consecutiveHours = new ArrayList<>();
+
+            for (int j = i; j < i + 4; j++) {
+                Map.Entry<String, Integer> entry = list.get(j);
+                total += entry.getValue();
+                consecutiveHours.add(entry.getKey());
+            }
+
+            if (total < minTotalPrice) {
+                minTotalPrice = total;
+                bestHours = new ArrayList<>(consecutiveHours);
+            }
+        }
+        return bestHours;
+    }
 
 
 }
