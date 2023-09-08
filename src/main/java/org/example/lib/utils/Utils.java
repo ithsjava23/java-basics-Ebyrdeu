@@ -11,15 +11,6 @@ public class Utils {
     }
 
     /**
-     * Simplifies user input using the scanner method.
-     *
-     * @return The user input in lowercase.
-     */
-    public static String prompt() {
-        return new Scanner(System.in).nextLine().toLowerCase();
-    }
-
-    /**
      * Logs a message and throws an exception if the message is empty.
      *
      * @param text The message to log.
@@ -28,23 +19,6 @@ public class Utils {
     public static void log(String text) {
         if (text.isEmpty()) throw new RuntimeException("Empty String");
         System.out.print(text);
-    }
-
-    /**
-     * Combines logging and prompting to the user.
-     *
-     * @param logText The message to log.
-     * @return The user input, or an empty string if an error occurs.
-     */
-    public static String logPrompt(String logText) {
-        log(logText);
-        try {
-            Scanner scanner = new Scanner(System.in);
-            return scanner.hasNextLine() ? scanner.nextLine().toLowerCase() : "";
-        } catch (Exception e) {
-            System.err.println("Error reading input: " + e.getMessage());
-            return "";
-        }
     }
 
     /**
