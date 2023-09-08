@@ -34,19 +34,18 @@ public class Window {
         boolean continueMenu;
         do {
             Utils.log(MENU);
-            continueMenu = menuOptions(scanner.nextLine(), scanner);
+            continueMenu = menuOptions(scanner);
         } while (continueMenu);
     }
 
     /**
      * Process the user's menu choice and execute the corresponding action.
      *
-     * @param choice  The user's menu choice.
      * @param scanner The Scanner object used to read user input.
      * @return True if the menu should continue to be displayed; false if the user chooses to exit.
      */
-    private static boolean menuOptions(String choice, Scanner scanner) {
-        switch (choice) {
+    private static boolean menuOptions(Scanner scanner) {
+        switch (scanner.nextLine()) {
             case "1" -> input(scanner);
             case "2" -> displayMinMaxAverage();
             case "3" -> sortElectricityPrices();
