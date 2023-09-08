@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Window class provide Console GUI
+ * The Window class provides a console-based GUI for handling electricity price data.
  */
 public class Window {
     private final static TreeMap<String, Integer> TREE_MAP = new TreeMap<>();
@@ -25,15 +25,16 @@ public class Window {
     }
 
     /**
-     * Main Method to start the app
+     * Main method to start the application.
      */
     public static void menu() {
         menuOptions(Utils.logPrompt(MENU));
     }
 
-
     /**
-     * @param opt takes value from MENU constant
+     * Process the user's menu choice.
+     *
+     * @param opt The user's menu choice.
      */
     private static void menuOptions(String opt) {
         switch (opt) {
@@ -42,47 +43,40 @@ public class Window {
             case "3" -> sort();
             case "4" -> bestChargeTime();
             case "5" -> showGraph();
-            case "e" -> exit();
+            case "e" -> Utils.log("Exiting the program...");
             default -> menu();
         }
     }
 
     /**
-     * First method that user need to choose when app is started as HashMap at moment is empty
+     * Method for user input of electricity prices for each hour.
      */
     private static void input() {
         for (int i = 0; i < 24; i++) {
             Utils.format("%02d-%02d o'clock price: ", i, i + 1);
 
-            /*
-             * arg 1 -  Format K to 00 as string
-             * Parse to integer necessary as prompt returns @type String
-             * */
+            // Parse user input as an integer and store it in the TreeMap.
             TREE_MAP.put(String.format("%02d", i), Integer.parseInt(Utils.prompt()));
         }
-
-        if (Utils.logPrompt("Show inputs before continue y/n \n").equals("y"))
-            TREE_MAP.forEach((i, o) -> Utils.format("%s: %d Öre \n", i, o));
-
         menu();
     }
 
     /**
-     * Method that allow to show Min Max and Average value on user provided inputs
+     * Calculate and display the minimum, maximum, and average electricity prices.
      */
     private static void minMaxAverage() {
         List<Map.Entry<String, Integer>> list = new ArrayList<>(TREE_MAP.entrySet());
         AtomicReference<Double> averagePrice = new AtomicReference<>(0.0);
 
-        // Min
+        // Calculate and display the minimum price.
         list.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
         Utils.format("Lägsta pris: %s, %d öre/kWh", Utils.clockFormat(list.get(0).getKey()), list.get(0).getValue());
 
-        // Max
+        // Calculate and display the maximum price.
         list.sort(Map.Entry.comparingByValue());
         Utils.format("Högsta pris: %s, %d öre/kWh", Utils.clockFormat(list.get(0).getKey()), list.get(0).getValue());
 
-        // Average
+        // Calculate and display the average price.
         TREE_MAP.forEach((s, integer) -> averagePrice.updateAndGet(v -> v + integer));
         Utils.format("Medelpris: %.2f öre/kWh", (averagePrice.get() / TREE_MAP.size()));
 
@@ -90,7 +84,7 @@ public class Window {
     }
 
     /**
-     * Sorting a List based on user desire
+     * Sort and display electricity prices in descending order.
      */
     private static void sort() {
         // Convert to List<Map.Entry<K, V>> for easy sort method
@@ -104,7 +98,7 @@ public class Window {
     }
 
     /**
-     * Method that show to user best cheapest prices
+     * Find and display the best charging times based on the lowest prices.
      */
     private static void bestChargeTime() {
         List<Map.Entry<String, Integer>> list = new ArrayList<>(TREE_MAP.entrySet());
@@ -124,7 +118,7 @@ public class Window {
     }
 
     /**
-     * Method for showing console graph based on data in HashMap
+     * Display a graphical representation of electricity prices.
      */
     public static void showGraph() {
         int max = TREE_MAP.values().stream().max(Integer::compareTo).orElse(0);
@@ -132,7 +126,7 @@ public class Window {
 
         int numSteps = 5;
 
-        // Calculate the size of each step on the y-axis
+        // Calculate the size of each step on the y-axis.
         int stepSize = (max - min) / numSteps;
 
         // Check Max value Map have to see what step to use for rendering y-axis/columns
@@ -160,17 +154,9 @@ public class Window {
         Utils.log("   | ");
         TREE_MAP.forEach((s, integer) -> Utils.log(s + " "));
 
-        System.out.println("\n");
+        System.out.println();
+
         menu();
     }
-
-    /**
-     * Method to exit app
-     */
-    private static void exit() {
-        if (Utils.logPrompt("Are you sure you want to exit a program y/n").equals("y")) Utils.log("Exited");
-        else menu();
-    }
-
 
 }

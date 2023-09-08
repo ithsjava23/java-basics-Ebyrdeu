@@ -1,93 +1,107 @@
 package org.example.lib.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 
 /**
- * The Utils class provides some useful methods to reduce repeated code
+ * The Utils class provides some useful methods to reduce repeated code.
  */
 public class Utils {
     private Utils() {
     }
 
     /**
-     * Method that simplifies scanner method for user input
+     * Simplifies user input using the scanner method.
      *
-     * @return String always returned  in lowerCase
+     * @return The user input in lowercase.
      */
     public static String prompt() {
         return new Scanner(System.in).nextLine().toLowerCase();
     }
 
     /**
-     * Only purpose is make it act like a char type when is empty
+     * Logs a message and throws an exception if the message is empty.
      *
-     * @param text accepts any String method if not empty
+     * @param text The message to log.
+     * @throws RuntimeException if the text is empty.
      */
-
     public static void log(String text) {
-        if (text.isBlank()) throw new RuntimeException("Empty String");
+        if (text.isEmpty()) throw new RuntimeException("Empty String");
         System.out.print(text);
     }
 
     /**
-     * Method that combines both log and prompt method
+     * Combines logging and prompting to the user.
      *
-     * @return String value from prompt
-     * @implNote Use When you need both logging and prompting to user
+     * @param logText The message to log.
+     * @return The user input, or an empty string if an error occurs.
      */
     public static String logPrompt(String logText) {
         log(logText);
-        return prompt();
+        try {
+            Scanner scanner = new Scanner(System.in);
+            return scanner.hasNextLine() ? scanner.nextLine().toLowerCase() : "";
+        } catch (Exception e) {
+            System.err.println("Error reading input: " + e.getMessage());
+            return "";
+        }
     }
 
     /**
-     * Work same as printf but with error handling on empty format and arguments
+     * Formats and prints a message with error handling for empty format or arguments.
      *
-     * @param format a format string acts as printf format
-     * @param args   an args Object acts as printf format
+     * @param format The format string (acts like printf format).
+     * @param args   The arguments (acts like printf arguments).
+     * @throws RuntimeException if the format or arguments are empty.
      */
     public static void format(String format, Object... args) {
-        if (format.isBlank()) throw new RuntimeException("Empty Format");
-        if (args.length == 0) throw new RuntimeException("Empty Arguments");
-        System.out.printf((format) + "%n", args);
+        if (format.isEmpty()) throw new IllegalArgumentException("Empty Format");
+        if (args.length == 0) throw new IllegalArgumentException("Empty Arguments");
+
+        try {
+            System.out.printf(format + "\n", args);
+        } catch (IllegalFormatException e) {
+            throw new IllegalArgumentException("Invalid Format: " + e.getMessage());
+        }
+
     }
 
     /**
-     * Format to 00-00 type of clock
+     * Formats a clock string to the "00-00" type.
      *
-     * @param clock return any 0-9 type of string otherwise it's going to fail
-     * @return String with calculated time to second be always +1
+     * @param clock The input clock string (0-9).
+     * @return The formatted clock string with seconds always +1.
      */
     public static String clockFormat(String clock) {
         return String.format("%s-%02d", clock, Integer.parseInt(clock) + 1);
     }
 
     /**
-     * Method that find best 4 consecutive hours
+     * Finds the best 4 consecutive hours in terms of price.
      *
-     * @param list takes any list where is K String and V Integer
-     * @return List<String> that contains best 4 consecutive hours
+     * @param list A list of entries where K is a String and V is an Integer.
+     * @return A list of strings containing the best 4 consecutive hours.
      */
     public static List<String> getBestHours(List<Map.Entry<String, Integer>> list) {
         int minTotalPrice = Integer.MAX_VALUE;
 
+        // Initialize a list to store the best 4 consecutive hours.
         List<String> bestHours = new ArrayList<>();
 
+        // Iterate through the list, considering each possible set of 4 consecutive hours.
         for (int i = 0; i <= list.size() - 4; i++) {
             int total = 0;
 
             List<String> consecutiveHours = new ArrayList<>();
 
+            // Iterate through the current set of 4 consecutive hours.
             for (int j = i; j < i + 4; j++) {
                 Map.Entry<String, Integer> entry = list.get(j);
                 total += entry.getValue();
                 consecutiveHours.add(entry.getKey());
             }
 
+            // Check if the total price for the current set of hours is lower than the minimum total price found so far.
             if (total < minTotalPrice) {
                 minTotalPrice = total;
                 bestHours = new ArrayList<>(consecutiveHours);
