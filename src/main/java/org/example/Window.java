@@ -135,37 +135,38 @@ public class Window {
         int max = ELECTRICITY_PRICES.values().stream().max(Integer::compareTo).orElse(0);
         int min = ELECTRICITY_PRICES.values().stream().min(Integer::compareTo).orElse(0);
 
-        int numSteps = 5;
+        float numSteps = 5f;
 
         // Calculate the size of each step on the y-axis.
-        int stepSize = ((max - min) / numSteps);
+        float stepSize = (max - min) / numSteps;
 
         // Check Max value Map have to see what step to use for rendering y-axis/columns
-        for (int i = numSteps; i >= 0; i--) {
+        for (int i = 5; i >= 0; i--) {
 
             // Calculate the y-axis value for the current step
-            int yValue = min + i * stepSize;
+            float yValue = min + i * stepSize;
 
             // Render the y-axis/columns and labels
-            if (yValue + 10 >= max || yValue == min) System.out.printf("%3d| ", yValue);
-            else Utils.log("   | ");
+            if (yValue >= max) System.out.printf("%3d|", max);
+            else if (yValue == min) System.out.printf("%3d|", min);
+            else Utils.log("   |");
 
             // Render bars depending on value we have
             ELECTRICITY_PRICES.forEach((s, integer) -> {
-                if (integer >= yValue) Utils.log(" x ");
-                else System.out.print("");
+                if (integer + 1 > yValue) Utils.log("  x");
+                else System.out.print("   ");
             });
 
             // Print new line
-            System.out.println();
+            System.out.print("\n");
         }
 
         // Render the x-axis/rows
-        Utils.log("   |------------------------------------------------------------------------ \n");
-        Utils.log("   | ");
-        ELECTRICITY_PRICES.forEach((s, integer) -> Utils.log(s + " "));
+        Utils.log("   |------------------------------------------------------------------------\n");
+        Utils.log("   |");
+        ELECTRICITY_PRICES.forEach((s, integer) -> Utils.log(" " + s));
 
-        System.out.println();
+        System.out.print("\n");
 
     }
 
