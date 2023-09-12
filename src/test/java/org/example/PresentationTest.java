@@ -53,6 +53,7 @@ public class PresentationTest {
                    |------------------------------------------------------------------------
                    | 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
                 """;
+
         assertThat(bos.toString()).contains(response);
     }
 
@@ -71,7 +72,7 @@ public class PresentationTest {
         String response = """
                 100|  x                                                                    \s
                    |  x  x  x  x                                                           \s
-                   |  x  x  x  x  x  x                                                     \s
+                   |  x  x  x  x  x                                                        \s
                    |  x  x  x  x  x  x  x  x                                               \s
                    |  x  x  x  x  x  x  x  x  x                                            \s
                 -12|  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x
